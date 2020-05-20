@@ -2,108 +2,130 @@
 
   'use strict'
 
-  angular.module("myApp",[])
+  angular.module("myApp",['ui.router'])
 
+  .service("MenuDataService",MenuDataService )
+  .component('myCategories',{
+templateUrl: 'mycategories.html',
+controller: CategoriesController,
+bindings:{
 
-  .controller("NarrowItDownController" , NarrowItDownController )
-  .service("MenuSearchService",MenuSearchService)
-  .directive('foundItems',FoundItemsDirective);
+}
+})
+.component('myItems',{
+  templateUrl:'myitem.html',
+  controller: ItemsController,
+  bindings:{
 
-function FoundItemsDirective() {
-  var ddo = {
-    templateUrl : 'itemsloaderindicator.template.html',
-//    scope:{
-  //    foundItems : '<',
-    //  onRemove: '='
-
-    //},
-    //controller: NarrowItDownController,
-    //controllerAs: 'menu',
-    //bindToController:true
   }
-  return ddo;
+})
+
+CategoriesController.$inject = ['MenuDataService'];
+function CategoriesController(MenuDataService) {
+
+  var $ctrl = this;
+
+
+  var promise =  MenuDataService.getAllCategories();
+
+        promise.then(function (abc) {
+
+          $ctrl.categories = abc;
+          console.log($ctrl.categories);
+
+        })
+        .catch(function (error) {
+          console.log("Something is wrong");
+
+        });
+
+        var pro = function (xy) {
+          console.log('short value = '+xy);
+
+        }
 }
 
-  NarrowItDownController.$inject = ['MenuSearchService'];
-  function NarrowItDownController(MenuSearchService) {
-
-    var menu = this;
-
+ItemsController.$inject = ['MenuDataService','$scope','$stateParams'];
+function ItemsController(MenuDataService,$scope,$stateParams) {
+  var $ctrl = this;
 
 
-    menu.searchTerm = undefined;
+console.log($stateParams.id);
+  var promise =  MenuDataService.getItemsForCategory($stateParams.id);
+
+        promise.then(function (abc) {
+
+          $ctrl.categories = abc;
+          console.log($ctrl.categories);
+
+        })
+        .catch(function (error) {
+          console.log("Something is wrong");
+
+        });
 
 
+}
 
-    menu.butt = function () {
+MenuDataService.$inject = ['$http'];
+function MenuDataService($http) {
 
-    var promise =  MenuSearchService.getMatchedMenuItems(menu.searchTerm);
+ var service = this;
 
-      promise.then(function (temp) {
+ service.getAllCategories  = function () {
 
-        menu.categories = temp;
-        console.log(menu.categories);
-            console.log(menu.categories[0].name);
-
-
-
-      })
-      .catch(function (error) {
-        console.log("Something is wrong");
-
-      });
-
-    }
-
-    menu.remove1 = function (Index,pass) {
-
-      MenuSearchService.remove(Index,pass);
-
-    };
-
-  }
-
-  MenuSearchService.$inject = ['$http'];
-  function MenuSearchService($http) {
-    var service = this;
-
-
-
-    service.getMatchedMenuItems = function (abc) {
-
-
-      return $http({
+   return $http({
         method : 'GET',
-        url : ('https://davids-restaurant.herokuapp.com/menu_items.json')
+        url : ('https://davids-restaurant.herokuapp.com/categories.json')
       }).then(function (response) {
 
         var found = [];
-    var temp = [];
 
-    temp = response.data.menu_items;
-    // console.log(temp[i].name);
-    for(var i=0;i<=218;i++)
-  {
 
-    if (temp[i].name.toLowerCase().indexOf(abc)=== -1)
-     {
+    found = response.data;
+    console.log("value"+found);
 
-    }
-    else {
-      found.push(temp[i])
-    }
-
-    }
     return found;
-});
 
-  };
-
-service.remove = function (index,prod) {
-  prod.splice(index,1);
-};
+  });
 
   }
+
+  service.getItemsForCategory = function (pass) {
+    return $http({
+      method : 'GET',
+      url : ('https://davids-restaurant.herokuapp.com/menu_items.json?category=')
+    }).then(function (response) {
+
+      var next =[];
+      var last = [];
+
+      next = response.data.menu_items;
+      console.log('items='+next);
+      console.log('value of pass='+pass);
+      console.log('name='+next[2].short_name);
+      var newpass = pass.toLowerCase();
+
+
+
+      for(var i=0;i<=218;i++){
+        if(next[i].short_name.toLowerCase().indexOf(newpass)===-1)
+        {
+
+        }
+        else {
+          last.push(next[i]);
+          console.log('new value = '+last);
+        }
+      }
+
+
+return last;
+    })
+
+  }
+
+}
 
 
 })();
