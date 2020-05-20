@@ -7,7 +7,7 @@
   RoutesConfig.$inject = ['$stateProvider','$urlRouterProvider'];
   function RoutesConfig($stateProvider,$urlRouterProvider) {
 
-  //  $urlRouterProvider.otherwise('/');
+ $urlRouterProvider.otherwise('/');
 
     $stateProvider
     .state('home',{
