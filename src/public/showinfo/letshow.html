@@ -1,0 +1,23 @@
+<h3>(Info: After the registration this page will give information about the person)</h3>
+<div ng-if='letCtrl.letVal.firstname.length>=1'>
+
+
+<h1>Details belongs to YOU:</h1>
+
+<b>FirstName:</b> {{letCtrl.letVal.firstname}} <br>
+<b>LastName:</b> {{letCtrl.letVal.lastname}} <br>
+<b>Email:</b> {{letCtrl.letVal.email}} <br>
+<b>Phone:</b> {{letCtrl.letVal.phone}} <br>
+<b>FavouriteMenu:</b> {{letCtrl.letVal.favmenu}} <br>
+
+
+
+<h1 ng-if='letCtrl.letItems.menu_items.length == 0' > Menu Item not available! </h1>
+
+<h1 ng-if='letCtrl.letItems.menu_items.length >= 1 '>Following are the items that belongs to your Favourite Menu:</h1>
+
+<let-item ng-repeat="menuItem in letCtrl.letItems.menu_items"
+           menu-item="menuItem">
+</let-item>
+
+</div>

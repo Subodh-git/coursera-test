@@ -1,0 +1,15 @@
+<h1>Details belongs to YOU:</h1>
+
+<b>FirstName:</b> {{showCtrl.pass.firstname}} <br>
+<b>LastName:</b> {{showCtrl.pass.lastname}} <br>
+<b>Email:</b> {{showCtrl.pass.email}} <br>
+<b>Phone:</b> {{showCtrl.pass.phone}} <br>
+<b>FavouriteMenu:</b> {{showCtrl.pass.favmenu}} <br>
+
+<h1 ng-if='showCtrl.showItems.menu_items.length == 0' > Menu Item not available! </h1>
+
+<h1 ng-if='showCtrl.showItems.menu_items.length >= 1 '>Following are the items that belongs to your Favourite Menu:</h1>
+
+<show-item ng-repeat="menuItem in showCtrl.showItems.menu_items"
+           menu-item="menuItem">
+</show-item>
